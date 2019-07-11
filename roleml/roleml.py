@@ -235,7 +235,7 @@ def predict(match, timeline):
         match = __prepare_cass_match(match)
 
     if isinstance(timeline, Timeline):
-        match = __prepare_cass_match(timeline)
+        match = __prepare_cass_timeline(timeline)
 
 
     if match["gameDuration"] < 720:
