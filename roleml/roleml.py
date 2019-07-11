@@ -220,12 +220,12 @@ def __prepare_cass_timeline(timeline):
 
     timeline_dict = timeline.to_dict()
     minute_10_participant_frames = timeline_dict['frames'][10]['participantFrames']
-    for frame in minute_10_participant_frames:
-        frame['minionsKilled'] = frame['creepScore']
-        frame["jungleMinionsKilled"] = frame["neutralMinionsKilled"]
-        frame["jungleMinionRatio"] = frame["neutralMinionsKilled"] / (frame["creepScore"] + frame["neutralMinionsKilled"])
-        del frame['creepScore']
-        del frame['neutralMinionsKilled']
+    for k in minute_10_participant_frames:
+        minute_10_participant_frames[k]['minionsKilled'] = minute_10_participant_frames[k]['creepScore']
+        minute_10_participant_frames[k]["jungleMinionsKilled"] = minute_10_participant_frames[k]["neutralMinionsKilled"]
+        minute_10_participant_frames[k]["jungleMinionRatio"] = minute_10_participant_frames[k]["neutralMinionsKilled"] / (minute_10_participant_frames[k]["creepScore"] + minute_10_participant_frames[k]["neutralMinionsKilled"])
+        del minute_10_participant_frames[k]['creepScore']
+        del minute_10_participant_frames[k]['neutralMinionsKilled']
     return timeline_dict
 
 
