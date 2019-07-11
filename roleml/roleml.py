@@ -1,4 +1,6 @@
 from sklearn.externals import joblib
+from cassiopeia import Match
+from cassiopeia.core.match import Timeline
 import numpy as np
 import matplotlib.path as mpl_path
 import pandas as pd
@@ -197,7 +199,45 @@ def get_features(match, timeline):
 
     return pd.DataFrame(participants_features_list)
 
+def __prepare_cass_match(match):
+    if not match.__Ghost_all_loaded:
+        match.load()
+
+    match_dict = match.to_dict()
+    for participant in match_dict['participants']:
+        participant['participantId'] = participant['id']
+        participant["spell1Id"] = participant["summonerSpellDId"]
+        participant["spell2Id"] = participant["summonerSpellFId"]
+        del participant['id']
+        del participant['summonerSpellDId']
+        del participant['summonerSpellFId']
+    return match_dict
+
+
+def __prepare_cass_timeline(timeline):
+    if not timeline.__Ghost_all_loaded:
+        timeline.load()
+
+    timeline_dict = timeline.to_dict()
+    minute_10_participant_frames = timeline_dict['frames'][10]['participantFrames']
+    for frame in minute_10_participant_frames:
+        frame['minionsKilled'] = frame['creepScore']
+        frame["jungleMinionsKilled"] = frame["neutralMinionsKilled"]
+        frame["jungleMinionRatio"] = frame["neutralMinionsKilled"] / (frame["creepScore"] + frame["neutralMinionsKilled"])
+        del frame['creepScore']
+        del frame['neutralMinionsKilled']
+    return timeline_dict
+
+
 def predict(match, timeline):
+
+    if isinstance(match, Match):
+        match = __prepare_cass_match(match)
+
+    if isinstance(timeline, Timeline):
+        match = __prepare_cass_match(timeline)
+
+
     if match["gameDuration"] < 720:
         raise Exception("Match too short")
         
