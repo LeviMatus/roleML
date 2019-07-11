@@ -200,7 +200,7 @@ def get_features(match, timeline):
     return pd.DataFrame(participants_features_list)
 
 def __prepare_cass_match(match):
-    if not match.__Ghost_all_loaded:
+    if not match.__Ghost__all_loaded:
         match.load()
 
     match_dict = match.to_dict()
@@ -215,7 +215,7 @@ def __prepare_cass_match(match):
 
 
 def __prepare_cass_timeline(timeline):
-    if not timeline.__Ghost_all_loaded:
+    if not timeline.__Ghost__all_loaded:
         timeline.load()
 
     timeline_dict = timeline.to_dict()
